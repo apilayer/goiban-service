@@ -4,16 +4,46 @@ goiban-service
 Implements a basic REST Web-service for validating IBAN account numbers in GO. Uses the logic from http://github.com/fourcube/goiban. Deployed at http://openiban.com .
 
 Running the service
-==============
+-------
 
+You have to install go >= 1.2, setup your GOPATH and install a MySQL server.
+Goiban requires a database called 'goiban'.
 
+```
+go get github.com/fourcube/goiban-data-loader
+cd $GOPATH/src/github.com/fourcube/goiban-data-loader
+go build
 
+# apply schema to database
+mysql -uroot -proot goiban < schema/1.sql
+
+# load data
+./goiban-data-loader bundesbank root:root@/goiban?charset=utf8
+
+go get github.com/fourcube/goiban-service
+cd $GOPATH/src/github.com/fourcube/goiban-service
+go build
+./goiban-service 8080 root:root@/goiban?charset=utf8
+```
+
+Using metrics
+-------
+
+You can use [KeenIO](http://keen.io) metrics if you want. Just use the following
+command when starting goiban-service:
+
+```
+./goiban-service 8080 root:root@/goiban?charset=utf8 <ENV> <ProjectID> <WriteAPIKey>
+```
+
+The metrics will be logged in a collection called <ENV>. You should not use "Test" or "Live" because those
+environments enable the HTML frontend.
 
 
 
 The MIT License (MIT)
 ------
-Copyright (c) 2013 Chris Grieger
+Copyright (c) 2014 Chris Grieger
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
