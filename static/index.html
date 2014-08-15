@@ -25,7 +25,7 @@
 		      <div class="header">
 		        <ul class="nav nav-pills pull-right">
 		          <li class="active"><a href="/">Home</a></li>
-		          <li><a href="http://github.com/fourcube/goiban">Source</a></li>
+		          <li><a href="http://github.com/fourcube/goiban-service">Source</a></li>
 		          <li><a href="http://github.com/fourcube">Contact</a></li>
 		          <li><a href="imprint.html">Imprint</a></li>
 		        </ul>
@@ -34,7 +34,7 @@
 
 		      <div class="jumbotron hidden-xs">
 		        <h2>IBAN Validation</h2>
-		        <p class="lead">Validate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it.</p>		        
+		        <p class="lead">Validate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it.</p>
 		      </div>
 		      <div class="row marketing">
 		      	<div class "col-lg-6">
@@ -57,8 +57,8 @@
 								        	</div>
 								        	<div class="col-sm-3">
 									        	<button type="button" class="btn btn-primary form-control " id="start_validation">Validate</button>
-									        </div>	
-									    </div>							       
+									        </div>
+									    </div>
 								        <div class="form-group form-group-iban-input">
 								        	<label class="col-sm-1 control-label">BIC:</label>
 								        	<div class="col-sm-11">
@@ -107,7 +107,7 @@
 								        	<label class="col-sm-3 control-label">Bank code:</label>
 								        	<div class="col-sm-6">
 									        	<input id="result_container" class="form-control" type="text" rows="5" placeholder=""/>
-									        </div>									        
+									        </div>
 								        </div>
 								        <div class="form-group">
 								        	<label class="col-sm-3 control-label">Account number:</label>
@@ -124,10 +124,10 @@
 						        	</form>
 							      </div>
 							    </div>
-							  </div>							  
+							  </div>
 							</div>
 						</div>
-		      	
+
 		      </div>
 		      <hr/>
 		      <div class="row marketing">
@@ -139,14 +139,14 @@
 		          <p>No data is stored. No request logs are written. Everything works in memory.</p>
 
 		          <h4>Open Source</h4>
-		          <p>You can wrap goiban with your own web service implementation. Just get the <a href="http://github.com/fourcube/goiban">source</a> and and installation of <a href="http://golang.org">go</a> and you're set. If you have any requests or problems with the service, please file an issue at <a href="http://github.com/fourcube/goiban-service/issues">github</a> or drop an e-mail at <span class="glyphicon glyphicon-send"></span> support(at)openiban.com .</p>
+		          <p>You can use <a href="http://github.com/fourcube/goiban-service">goiban-service</a> for a self hosted service. Or get the <a href="http://github.com/fourcube/goiban">source</a> and and installation of <a href="http://golang.org">go</a> and wrap it with your own web-service implementation. If you have any requests or problems with the service, please file an issue at <a href="http://github.com/fourcube/goiban-service/issues">github</a> or drop an e-mail at <span class="glyphicon glyphicon-send"></span> support(at)openiban.com .</p>
 		        </div>
 
 		        <div class="col-lg-6">
 		          <h4>Metrics</h4>
-		          <p>No metrics until now...</p>		
+		          <p>The <a href="http://github.com/fourcube/goiban-service">goiban-service</a> implementation supports <a href="https://keen.io/">KeenIO</a> metrics. See the <a href="http://github.com/fourcube/goiban-service">README</a> for more information.</p>
 		          <h4>Validation mechanics</h4>
-		          <p>Validation currently works by checking validity of the IBAN checksum and the length restriction for country specific IBAN numbers. A list of country specific BIC checks can be found <a href="#additional-info">here</a>. If the validation result is valid, the IBAN is technically OK for the specific country. <p class="text-danger"><b>Warning: Even technically valid IBANs might still contain a crafted bank code or account number.</b></p></p>	          
+		          <p>Validation currently works by checking validity of the IBAN checksum and the length restriction for country specific IBAN numbers. A list of country specific BIC checks can be found <a href="#additional-info">here</a>. If the validation result is valid, the IBAN is technically OK for the specific country. <p class="text-danger"><b>Warning: Even technically valid IBANs might still contain a crafted bank code or account number.</b></p></p>
 		        </div>
 		      </div>
 <hr/>
@@ -156,18 +156,18 @@
 		          <p>openiban.com allows Cross Domain Access. You can easily add the validation to your own site by using the following JavaScript snippet:</p>
 		          <pre>
 $.ajax({
-	url: 'https://openiban.com/validate/DE89370400440532013000',	// replace with 
+	url: 'https://openiban.com/validate/DE89370400440532013000',	// replace with
 								// dynamic value
 	data: { // pass additional options
 		"validateBankCode": true, 	// (not guaranteed)
 		"getBIC": true 			// (not guaranteed)
 	},
-	success: function(data) {			
+	success: function(data) {
 		var result = $.parseJSON(data);
 		if(result.valid) {
 			// YOUR LOGIC
 			//
-		}	
+		}
 	},
 	error: function(xhr) {
 		// handle error
@@ -175,7 +175,7 @@ $.ajax({
 });
 		          </pre>
 		          <h4>REST</h4>
-		          <p>You can also use the REST Webservice directly in your application. Just send a GET request to </p>		
+		          <p>You can also use the REST Webservice directly in your application. Just send a GET request to </p>
 
 		          <div class="well"><code>https://openiban.com/validate/IBAN_NUMBER?getBIC=true&validateBankCode=true</code></div>
 
@@ -197,10 +197,10 @@ $.ajax({
   },
   "checkResults": {
     "bankCode": true 		// info about your additional check requests
-  }  
+  }
 }
 							</pre>
-		          
+
 		        </div>
 		      </div>
 		      <div class="row marketing" id="additional-info">
@@ -214,8 +214,8 @@ $.ajax({
 		          <ul>
 		          	<li>Germany</li>
 		          </ul>
-		          
-		        </div>		    
+
+		        </div>
 		        <div class="col-lg-6">
 
 		          <h4>BIC lookup</h4>
@@ -223,12 +223,12 @@ $.ajax({
 		          <ul>
 		          	<li>Germany</li>
 		          </ul>
-		          
-		        </div>		    
-		      </div>	
+
+		        </div>
+		      </div>
 		      <div class="footer">
 		        <div class="pull-left">
-		        	<p>&copy; Chris Grieger 2013</p>
+		        	<p>&copy; Chris Grieger 2014</p>
 		        </div>
 		      </div>
 

@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2013 Chris Grieger
+Copyright (c) 2014 Chris Grieger
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -90,7 +90,7 @@ func main() {
 	http.HandleFunc("/validate/", validationHandler)
 
 	//Only host the static template when the ENV is 'Live'
-	if ENV == "Live" {
+	if ENV == "Live" || ENV == "Test" {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "static/"+r.URL.Path[1:])
 		})
