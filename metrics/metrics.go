@@ -75,7 +75,7 @@ func (keen *KeenMetrics) WriteLogRequest(collectionName string, iban *goiban.Iba
 	res, err := req.Do()
 
 	if err != nil {
-		log.Fatalf("Error while posting stats: %v", err)
+		log.Printf("Error while posting stats: %v", err)
 		return
 	}
 
