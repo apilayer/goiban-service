@@ -36,8 +36,7 @@ command when starting goiban-service:
 ./goiban-service 8080 root:root@/goiban?charset=utf8 <ENV> <ProjectID> <WriteAPIKey>
 ```
 
-The metrics will be logged in a collection called <ENV>. You should not use "Test" or "Live" because those
-environments enable the HTML frontend.
+The metrics will be logged in a collection called equals to the ENV parameter. You should not use "Test" or "Live" because those environments enable the HTML frontend.
 
 
 
