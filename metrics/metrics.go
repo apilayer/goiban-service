@@ -79,6 +79,11 @@ func (keen *KeenMetrics) WriteLogRequest(collectionName string, iban *goiban.Iba
 		return
 	}
 
+	// Close the response body
+	if res.Body != nil {
+		defer res.Body.Close()
+	}
+
 	if collectionName == "Test" {
 		log.Printf(url)
 		text, _ := res.Body.ToString()
@@ -109,6 +114,11 @@ func (keen *KeenMetrics) LogRequestFromValidationResult(collectionName string, v
 
 	if err != nil {
 		log.Printf("Error while posting stats: %v", err)
+	}
+
+	// Close the response body
+	if res.Body != nil {
+		defer res.Body.Close()
 	}
 
 	if collectionName == "Test" {
