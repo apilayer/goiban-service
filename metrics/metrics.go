@@ -114,6 +114,7 @@ func (keen *KeenMetrics) LogRequestFromValidationResult(collectionName string, v
 
 	if err != nil {
 		log.Printf("Error while posting stats: %v", err)
+		return
 	}
 
 	// Close the response body
