@@ -223,7 +223,7 @@ func hitCache(iban string) (string, bool) {
 
 }
 
-// Only logs when metrics is defined enabled
+// Only logs when metrics is defined
 func logFromCacheEntry(ENV string, value string) {
 	if metrics != nil {
 		metrics.LogRequestFromValidationResult(ENV, value)
