@@ -79,7 +79,7 @@ func main() {
 		}
 	}
 
-	go listen(port, ENV, mysqlURL)
+	listen(port, ENV, mysqlURL)
 }
 
 func listen(port string, environment string, dbUrl string) {
