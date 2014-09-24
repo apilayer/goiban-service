@@ -79,9 +79,13 @@ func main() {
 		}
 	}
 
-	log.Printf("Setting env to %v", ENV)
+	go listen(port, ENV, mysqlURL)
+}
 
-	db, err = sql.Open("mysql", mysqlURL)
+func listen(port string, environment string, dbUrl string) {
+	log.Printf("Setting env to %v", environment)
+
+	db, err = sql.Open("mysql", dbUrl)
 
 	if err != nil {
 		log.Fatalf("Error opening DB connection: %v", err)
@@ -89,8 +93,8 @@ func main() {
 
 	http.HandleFunc("/validate/", validationHandler)
 
-	//Only host the static template when the ENV is 'Live'
-	if ENV == "Live" || ENV == "Test" {
+	//Only host the static template when the ENV is 'Live' or 'Test'
+	if environment == "Live" || environment == "Test" {
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "static/"+r.URL.Path[1:])
 		})
@@ -101,16 +105,16 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
-
 }
 
 // Processes requests to the /validate/ url
 func validationHandler(w http.ResponseWriter, r *http.Request) {
 	var strRes string
 	config := map[string]bool{}
-	// set response type
-	w.Header().Add("Content-Type", "text/html; charset=utf-8")
-	// allow CORS
+	// Set response type to application/json.
+	// See: https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet#RULE_.233.1_-_HTML_escape_JSON_values_in_an_HTML_context_and_read_the_data_with_JSON.parse
+	w.Header().Add("Content-Type", "application/json; charset=utf-8")
+	// Allow CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// extract iban parameter

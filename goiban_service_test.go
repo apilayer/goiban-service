@@ -32,12 +32,27 @@ import (
 	"testing"
 )
 
+func init() {
+	go listen("8080", "Test", "root:root@/goiban?charset=utf8")
+}
+
 func BenchmarkValidation(b *testing.B) {
 	list, _ := readLines("test/iban_test.txt")
 	b.ResetTimer()
 	for _, iban := range list {
 		resp, _ := http.Get("http://localhost:8080/validate/" + iban)
 		resp.Body.Close()
+	}
+}
+
+func TestSafeContentTypeOnSuccess(t *testing.T) {
+	resp, _ := http.Get("http://localhost:8080/validate/DE89370400440532013000")
+	contentType := resp.Header.Get("Content-Type")
+
+	expectedContentType := "application/json; charset=utf-8"
+
+	if contentType != expectedContentType {
+		t.Errorf("Content type was %v instead of %v", contentType, expectedContentType)
 	}
 }
 
