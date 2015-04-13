@@ -42,7 +42,7 @@ The metrics will be logged in a collection named after the <ENV> parameter. You 
 
 The MIT License (MIT)
 ------
-Copyright (c) 2014 Chris Grieger
+Copyright (c) 2015 Chris Grieger
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
