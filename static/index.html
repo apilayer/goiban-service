@@ -34,8 +34,9 @@
 
 		      <div class="jumbotron hidden-xs">
 		        <h2>IBAN Validation</h2>
-		        <p class="lead">Validate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it.</p>
+		        <p class="lead">Validate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
 		      </div>
+					<p><b> Update (2015/04/13) </b>: Belgian BIC validation (<a href="/validate/BE62 5100 0754 7061" class="smaller">sample</a>), <a href="/metrics">Usage Metrics</a>.</p>
 		      <div class="row marketing">
 		      	<div class "col-lg-6">
 			      	<div class="panel-group " id="accordion">
@@ -143,8 +144,8 @@
 		        </div>
 
 		        <div class="col-lg-6">
-		          <h4>Metrics</h4>
-		          <p>The <a href="http://github.com/fourcube/goiban-service">goiban-service</a> implementation supports <a href="https://keen.io/">KeenIO</a> metrics. See the <a href="http://github.com/fourcube/goiban-service">README</a> for more information.</p>
+		          <h4><a href="/metrics">Metrics</a></h4>
+		          <p>Checkout all gathered metrics in <a href="/metrics">JSON format</a>. The <a href="http://github.com/fourcube/goiban-service">goiban-service</a> implementation supports <a href="https://keen.io/">KeenIO</a> metrics (deprecated). See the <a href="http://github.com/fourcube/goiban-service">README</a> for more information.</p>
 		          <h4>Validation mechanics</h4>
 		          <p>Validation currently works by checking validity of the IBAN checksum and the length restriction for country specific IBAN numbers. A list of country specific BIC checks can be found <a href="#additional-info">here</a>. If the validation result is valid, the IBAN is technically OK for the specific country. <p class="text-danger"><b>Warning: Even technically valid IBANs might still contain a crafted bank code or account number.</b></p></p>
 		        </div>
