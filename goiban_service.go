@@ -122,25 +122,11 @@ func validationHandler(w http.ResponseWriter, r *http.Request) {
 
 	// check for additional request parameters
 	validateBankCodeQueryParam := r.FormValue("validateBankCode")
-	switch validateBankCodeQueryParam {
-	case "1":
-		config["validateBankCode"] = true
-	case "true":
-		config["validateBankCode"] = true
-	default:
-		config["validateBankCode"] = false
-	}
+	config["validateBankCode"] = toBoolean(validateBankCodeQueryParam)
 
 	// check for additional request parameters
 	getBicQueryParam := r.FormValue("getBIC")
-	switch getBicQueryParam {
-	case "1":
-		config["getBIC"] = true
-	case "true":
-		config["getBIC"] = true
-	default:
-		config["getBIC"] = false
-	}
+	config["getBIC"] = toBoolean(getBicQueryParam)
 
 	// hit the cache
 	value, found := hitCache(iban + strconv.FormatBool(config["getBIC"]) + strconv.FormatBool(config["validateBankCode"]))
@@ -202,6 +188,17 @@ func validationHandler(w http.ResponseWriter, r *http.Request) {
 	c.Set(key, strRes, 0)
 	fmt.Fprintf(w, strRes)
 	return
+}
+
+func toBoolean(value string) bool {
+	switch value {
+	case "1":
+		return true
+	case "true":
+		return true
+	default:
+		return false
+	}
 }
 
 func additionalData(iban *goiban.Iban, intermediateResult *goiban.ValidationResult, config map[string]bool) *goiban.ValidationResult {
