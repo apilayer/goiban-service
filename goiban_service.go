@@ -52,12 +52,13 @@ route							description
 /*								Renders static content from the "./static" folder
 */
 var (
-	c        = cache.New(5*time.Minute, 30*time.Second)
-	db       *sql.DB
-	err      error
-	PREP_ERR error
-	ENV      string
-	metrics  *m.KeenMetrics
+	c            = cache.New(5*time.Minute, 30*time.Second)
+	db           *sql.DB
+	err          error
+	PREP_ERR     error
+	ENV          string
+	metrics      *m.KeenMetrics
+	inmemMetrics = m.NewInmemMetricsRegister()
 )
 
 func main() {
@@ -92,6 +93,7 @@ func listen(port string, environment string, dbUrl string) {
 	}
 
 	http.HandleFunc("/validate/", validationHandler)
+	http.Handle("/metrics", http.Handler(inmemMetrics))
 
 	//Only host the static template when the ENV is 'Live' or 'Test'
 	if environment == "Live" || environment == "Test" {
@@ -228,6 +230,11 @@ func hitCache(iban string) (string, bool) {
 func logFromCacheEntry(ENV string, value string) {
 	if metrics != nil {
 		metrics.LogRequestFromValidationResult(ENV, value)
+	} else {
+		var result *goiban.ValidationResult
+		json.Unmarshal([]byte(value), &result)
+
+		inmemMetrics.Register(m.ValidationResultToEvent(result))
 	}
 }
 
@@ -235,5 +242,7 @@ func logFromCacheEntry(ENV string, value string) {
 func logFromIbanResult(ENV string, value *goiban.Iban) {
 	if metrics != nil {
 		metrics.WriteLogRequest(ENV, value)
+	} else {
+		inmemMetrics.Register(m.IbanToEvent(value))
 	}
 }
