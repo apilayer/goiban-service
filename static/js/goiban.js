@@ -10,7 +10,7 @@ $(document).ready(function() {
 		goiban.validate(iban, function(resultJSON) {
 			if(resultJSON.valid) {
 
-				$('#text_result_container').val("IBAN is valid.")
+				$('#text_result_container').val("IBAN is valid.");
 				if(resultJSON.bankData && resultJSON.bankData.bic) {
 					$('#bic_result_container').val(resultJSON.bankData.bic);
 				} else {
@@ -18,7 +18,7 @@ $(document).ready(function() {
 				}
 				$('.form-group-iban-input').addClass("has-success");
 			} else {
-				$('#text_result_container').val("IBAN is not valid!")
+				$('#text_result_container').val("IBAN is not valid!");
 				$('.form-group-iban-input').addClass("has-error");
 			}
 			$('#result_container').val(JSON.stringify(resultJSON, null, " "));
@@ -52,16 +52,15 @@ var goiban = {
 	THE SOFTWARE.
 	*/
 	validate: function(iban, callback) {
-		
+
 		$.ajax({
 			data: {"validateBankCode":true, "getBIC": true},
 			url: '/validate/' + iban,
-			success: function(data) {			
+			success: function(data) {
 				callback(data);
 			},
 			error: function(xhr) {
 				callback("Empty request.");
 			}});
 	}
-}
-
+};
