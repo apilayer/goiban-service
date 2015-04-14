@@ -31,7 +31,7 @@ $(document).ready(function() {
 	 knownLabels;
 
 	function updateChart() {
-		$.get('http://openiban.com/metrics').then(function (data) {
+		$.get('//openiban.com/metrics').then(function (data) {
 			var metrics = goiban.getMetrics24h(data);
 			if(!chart24h || knownLabels.length != metrics.labels.length) {
 				knownLabels = metrics.labels;
@@ -47,7 +47,7 @@ $(document).ready(function() {
 			chart24h.update();
 		});
 	}
-	
+
 	updateChart();
 	setInterval(updateChart, 5000);
 
