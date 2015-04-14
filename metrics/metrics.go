@@ -47,9 +47,9 @@ func ValidationResultToEvent(validationResult *goiban.ValidationResult) Event {
 
 func (imr *InmemMetricsRegister) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
-	w.WriteHeader(http.StatusOK)
 	// Allow CORS
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	encoder.Encode(imr.Data())
 }
