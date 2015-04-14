@@ -38,7 +38,7 @@ command when starting goiban-service:
 
 The metrics will be logged in a collection named after the <ENV> parameter. You should not use "Test" or "Live" because those environments enable the HTML frontend.
 
-In-memory metrics are automatically available under http://<host>:<port>/metrics.
+In-memory metrics are automatically available under `http://<host>:<port>/metrics`.
 
 
 
