@@ -144,7 +144,8 @@
 		        </div>
 
 		        <div class="col-lg-6">
-		          <h4><a href="/metrics">Metrics</a></h4>
+		          <h4><a href="/metrics">Metrics</a> (last 24h)</h4>
+							<canvas id="chart" style="width: 100%; padding-right: 18px; height: 200px;"></canvas>
 		          <p>Checkout all gathered metrics in <a href="/metrics">JSON format</a>. The <a href="http://github.com/fourcube/goiban-service">goiban-service</a> implementation supports <a href="https://keen.io/">KeenIO</a> metrics (deprecated). See the <a href="http://github.com/fourcube/goiban-service">README</a> for more information.</p>
 		          <h4>Validation mechanics</h4>
 		          <p>Validation currently works by checking validity of the IBAN checksum and the length restriction for country specific IBAN numbers. A list of country specific BIC checks can be found <a href="#additional-info">here</a>. If the validation result is valid, the IBAN is technically OK for the specific country. <p class="text-danger"><b>Warning: Even technically valid IBANs might still contain a crafted bank code or account number.</b></p></p>
@@ -238,6 +239,9 @@ $.ajax({
 	    </div> <!-- /container -->
 	    <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 	    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+			<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+		  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+		  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
 	    <script type="text/javascript" src="js/goiban.js"></script>
 	</body>
 </html>

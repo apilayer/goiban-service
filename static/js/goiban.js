@@ -25,6 +25,50 @@ $(document).ready(function() {
 		});
 
 	});
+
+	var ctx = document.getElementById('chart').getContext('2d');
+
+  function getCount(x, key) {
+    return {country: key, count: x.Count};
+  }
+
+  function withinLast24Hours(x) {
+    var time = x.Interval;
+
+    return moment(time).isAfter(moment().subtract('1', 'day'));
+  }
+  // last 24 hours
+  $.get('http://openiban.com/metrics').then(function (data) {
+    var chartData = {};
+    data = _.chain(data)
+      .filter(withinLast24Hours)
+      .pluck('Counters')
+      .reduce(function (acc, x) {
+        var t = _.map(x, getCount);
+
+        _.each(t, function (t) {
+          acc[t.country] = (acc[t.country] || 0) + t.count;
+        });
+
+        return acc;
+      }, {})
+      .value();
+
+    chartData.labels = _.keys(data);
+    chartData.datasets = [{
+      label: 'Sum',
+			fillColor: "rgba(151,187,205,0.5)",
+      strokeColor: "rgba(151,187,205,0.8)",
+      highlightFill: "rgba(151,187,205,0.75)",
+      highlightStroke: "rgba(151,187,205,1)",
+      data: _.values(data)
+    }];
+
+    var chart24h = new Chart(ctx).Bar(chartData, {
+      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+    });
+
+  });
 });
 
 var goiban = {
