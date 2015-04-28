@@ -49,7 +49,7 @@ $(document).ready(function() {
 	}
 
 	updateChart();
-	setInterval(updateChart, 5000);
+	setInterval(updateChart, 10000);
 
 });
 
