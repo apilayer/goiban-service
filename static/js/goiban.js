@@ -117,14 +117,20 @@ var goiban = {
       }, {})
       .value();
 
-    chartData.labels = _.keys(data);
+    chartData.labels = _.chain(data)
+      .pairs()
+      .filter(function (k) { return k[0].length > 0; })
+      .sortBy(function (k) { return -k[1]; })
+      .map(function (k) { return k[0]; })
+      .value();
+
     chartData.datasets = [{
       label: 'Sum',
 			fillColor: "rgba(151,187,205,0.5)",
       strokeColor: "rgba(151,187,205,0.8)",
       highlightFill: "rgba(151,187,205,0.75)",
       highlightStroke: "rgba(151,187,205,1)",
-      data: _.values(data)
+      data: _.map(chartData.labels, function (key) { return data[key]; } )
     }];
 
     return chartData;
