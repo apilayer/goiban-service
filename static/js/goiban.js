@@ -121,6 +121,7 @@ var goiban = {
       .pairs()
       .filter(function (k) { return k[0].length > 0; })
       .sortBy(function (k) { return -k[1]; })
+      .take(8)
       .map(function (k) { return k[0]; })
       .value();
 
