@@ -28,25 +28,40 @@ import (
 	"bufio"
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/julienschmidt/httprouter"
 )
 
-func init() {
-	go listen("8080", "Test", "root:root@/goiban?charset=utf8")
+var server *httptest.Server
+
+func TestMain(m *testing.M) {
+	router := httprouter.New()
+	router.GET("/calculate/:countryCode/:bankCode/:accountNumber", calculateIBAN)
+	router.GET("/validate/:iban", validationHandler)
+	router.GET("/countries", countryCodeHandler)
+	server = httptest.NewServer(router)
+
+	retCode := m.Run()
+	server.Close()
+
+	os.Exit(retCode)
 }
 
 func BenchmarkValidation(b *testing.B) {
 	list, _ := readLines("test/iban_test.txt")
 	b.ResetTimer()
 	for _, iban := range list {
-		resp, _ := http.Get("http://localhost:8080/validate/" + iban)
+
+		resp, _ := http.Get(server.URL + "/validate/" + iban)
 		resp.Body.Close()
 	}
 }
 
 func TestSafeContentTypeOnSuccess(t *testing.T) {
-	resp, _ := http.Get("http://localhost:8080/validate/DE89370400440532013000")
+	resp, _ := http.Get(server.URL + "/validate/DE89370400440532013000")
 	contentType := resp.Header.Get("Content-Type")
 
 	expectedContentType := "application/json; charset=utf-8"

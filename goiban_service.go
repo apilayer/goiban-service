@@ -37,6 +37,7 @@ import (
 	"github.com/fourcube/goiban"
 	m "github.com/fourcube/goiban-service/metrics"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/julienschmidt/httprouter"
 	"github.com/pmylund/go-cache"
 )
 
@@ -92,17 +93,19 @@ func listen(port string, environment string, dbUrl string) {
 		log.Fatalf("Error opening DB connection: %v", err)
 	}
 
-	http.HandleFunc("/validate/", validationHandler)
-	http.Handle("/metrics", http.Handler(inmemMetrics))
+	router := httprouter.New()
+
+	router.GET("/validate/:iban", validationHandler)
+	router.GET("/countries", countryCodeHandler)
+	router.GET("/calculate/:countryCode/:bankCode/:accountNumber", calculateIBAN)
+	router.Handler("GET", "/metrics", http.Handler(inmemMetrics))
 
 	//Only host the static template when the ENV is 'Live' or 'Test'
 	if environment == "Live" || environment == "Test" {
-		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, "static/"+r.URL.Path[1:])
-		})
+		router.NotFound = http.FileServer(http.Dir("static"))
 	}
 
-	err = http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, router)
 
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -110,7 +113,7 @@ func listen(port string, environment string, dbUrl string) {
 }
 
 // Processes requests to the /validate/ url
-func validationHandler(w http.ResponseWriter, r *http.Request) {
+func validationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var strRes string
 	config := map[string]bool{}
 	// Set response type to application/json.
@@ -120,7 +123,7 @@ func validationHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// extract iban parameter
-	iban := r.URL.Path[len("/validate/"):]
+	iban := ps.ByName("iban")
 
 	// check for additional request parameters
 	validateBankCodeQueryParam := r.FormValue("validateBankCode")

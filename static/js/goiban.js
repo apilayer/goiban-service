@@ -1,4 +1,53 @@
 $(document).ready(function() {
+  goiban.getCountryCodes(function (codes) {
+    console.log(codes);
+    var $el = $("#calculate_country_input");
+
+    $el.empty();
+    $.each(codes, function(value,key) {
+      $el.append($("<option></option>")
+         .attr("value", key).text(value));
+    });
+  });
+
+  $("#start_generation").click(function() {
+    $('.form-group').removeClass("has-error").removeClass("has-success").removeClass("has-warning");
+
+    var countryCode = $("#calculate_country_input").val();
+    var bankCode = $("#bank_code").val();
+    var err = false;
+
+    if(bankCode.length < 1) {
+      $('.form-group-bank-code-input').addClass("has-error");
+      err = true;
+    }
+
+    var accountNumber = $("#account_number").val();
+    if(accountNumber.length < 1) {
+      $('.form-group-account-input').addClass("has-error");
+      err = true;
+    }
+
+    if(err) {
+      return;
+    }
+
+    goiban.calculate(countryCode, bankCode, accountNumber, function(result) {
+      if(result.valid) {
+        $('.form-group-calculate-result-input').addClass("has-success");
+        $("#iban_container").val(result.iban);
+        $('#calculation_result_container').val(JSON.stringify(result, null, " "));
+      } else {
+        $('.form-group-calculate-result-input').addClass("has-error");
+        $("#iban_container").val(result.message);
+        $('#calculation_result_container').val(JSON.stringify(result, null, " "));
+      }
+    });
+
+
+
+  });
+
 	$("#start_validation").click(function() {
 		var iban = $('#iban_input').val();
 		if(iban.length < 1) {
@@ -87,6 +136,14 @@ var goiban = {
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
 	*/
+  getCountryCodes: function (callback) {
+    $.ajax({
+      url: '/countries',
+      success: function(data) {
+        callback(data);
+      }
+    });
+  },
 	validate: function(iban, callback) {
 
 		$.ajax({
@@ -99,6 +156,16 @@ var goiban = {
 				callback("Empty request.");
 			}});
 	},
+  calculate: function(countryCode, bankCode, accountNumber, callback) {
+    $.ajax({
+			url: '/calculate/' + countryCode + "/" + bankCode + "/" + accountNumber,
+			success: function(data) {
+				callback(data);
+			},
+			error: function(xhr) {
+				callback("Empty request.");
+			}});
+  },
 
 	getMetrics24h: function(data) {
 		var chartData = {};

@@ -2,11 +2,11 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Validate IBAN numbers without any restrictions or captchas. Use our free rest webservice or integrate the check directly into your website. You can input the IBAN into a form an perform validation or send a direct request. Also check out our secure HTTPS service at https://openiban.com .">
+    <meta name="description" content="Validate and Calculate IBAN numbers without any restrictions or captchas. Use our free rest webservice or integrate the check directly into your website. You can input the IBAN into a form an perform validation or send a direct request. Also check out our secure HTTPS service at https://openiban.com .">
     <meta name="author" content="Chris Grieger">
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
-    <title>openiban - Free and Public IBAN Validation Webservice</title>
+    <title>openiban - Free and Public IBAN Validation and Calculation Webservice</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -33,9 +33,11 @@
 		      </div>
 
 		      <div class="jumbotron hidden-xs">
-		        <h2>IBAN Validation</h2>
-		        <p class="lead">Validate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
+		        <h2>IBAN Validation and Calculation<small>(beta)</small></h2>
+		        <p class="lead">Validate and calculate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
 		      </div>
+          <p><b> Update (2016/01/07) </b>: Calculate IBAN Codes Beta (<a href="calculate/be/539/007547034" class="smaller">sample</a>)</p>
+          <p class="text-danger">This is Beta functionality, so please make sure that you validate the result manually or by using the validation service.</p>
           <p><b> Update (2016/01/05) </b>: Updated BIC data for Belgium, Germany and Netherlands.</p>
 					<p><b> Update (2015/04/15) </b>: Netherlands bank code validation (<a href="validate/NL78INGB0675281091?getBIC=true&validateBankCode=true" class="smaller">sample</a>)</p>
 					<p><b> Update (2015/04/13) </b>: Belgian bank code validation (<a href="validate/BE68844010370034?getBIC=true&validateBankCode=true" class="smaller">sample</a>), <a href="/metrics">Usage Metrics</a>.</p>
@@ -66,13 +68,13 @@
 								        <div class="form-group form-group-iban-input">
 								        	<label class="col-sm-1 control-label">BIC:</label>
 								        	<div class="col-sm-11">
-									        	<input id="bic_result_container" class="form-control" disabled type="text" rows="5" placeholder="BIC will appear here."></input>
+									        	<input id="bic_result_container" class="form-control" readonly type="text" rows="5" placeholder="BIC will appear here."></input>
 									        </div>
 								        </div>
 								         <div class="form-group form-group-iban-input">
 								        	<label class="col-sm-1 control-label">Result:</label>
 								        	<div class="col-sm-11">
-									        	<input id="text_result_container" class="form-control" disabled type="text" rows="5" placeholder="Result will appear here."></input>
+									        	<input id="text_result_container" class="form-control" readonly type="text" rows="5" placeholder="Result will appear here."></input>
 									        </div>
 								        </div>
 								        <div class="form-group">
@@ -85,44 +87,50 @@
 							      </div>
 							    </div>
 							  </div>
-							  <div class="panel panel-default panel-warning">
+							  <div class="panel panel-default panel-info ">
 							    <div class="panel-heading">
 							      <h4 class="panel-title">
-							        <a class="" data-toggle="" data-parent="#accordion" href="#collapseTwo">
-							         	Generate IBAN Codes (under construction)
+							        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        <span class="glyphicon glyphicon-cog"  style="margin-right:10px;"></span>
+							         	Calculate IBAN Codes (Beta)
 							        </a>
 							      </h4>
 							    </div>
-							    <div id="collapseTwo" class="panel-collapse collapse">
+							    <div id="collapseTwo" class="panel-collapse collapse in">
 							      <div class="panel-body">
 							        <form class="form-horizontal">
 						      			<div class="form-group">
 						      				<label class="col-sm-3 control-label">Country</label>
 						      				<div class="col-sm-6">
-								        		<select class="form-control" id="iban_input" type="combo" name="iban" placeholder="DE0976000345123456...">
-
+								        		<select class="form-control" id="calculate_country_input" type="combo" name="country" placeholder="DE">
 								        		</select>
 								        	</div>
 								        	<div class="col-sm-3">
-									        	<button type="button" class="btn btn-primary form-control " id="start_validation">Generate</button>
+									        	<button type="button" class="btn btn-primary form-control " id="start_generation">Calculate</button>
 									        </div>
 								        </div>
-								        <div class="form-group">
+								        <div class="form-group  form-group-bank-code-input">
 								        	<label class="col-sm-3 control-label">Bank code:</label>
 								        	<div class="col-sm-6">
-									        	<input id="result_container" class="form-control" type="text" rows="5" placeholder=""/>
+									        	<input id="bank_code" class="form-control" type="text" rows="5" placeholder=""/>
 									        </div>
 								        </div>
-								        <div class="form-group">
+								        <div class="form-group form-group-account-input">
 								        	<label class="col-sm-3 control-label">Account number:</label>
 								        	<div class="col-sm-6">
-									        	<input id="result_container" class="form-control" type="text" rows="5" placeholder=""/>
+									        	<input id="account_number" class="form-control" type="text" rows="5" placeholder=""/>
 									        </div>
 								        </div>
-								        <div class="form-group">
+								        <div class="form-group form-group-calculate-result-input">
 								        	<label class="col-sm-3 control-label">Result:</label>
 								        	<div class="col-sm-6">
-									        	<input id="result_container" class="form-control" type="text" rows="5" placeholder="Result will appear here."/>
+									        	<input id="iban_container" class="form-control" type="text" rows="5" placeholder="Result will appear here." readonly/>
+									        </div>
+								        </div>
+                        <div class="form-group">
+								        	<label class="col-sm-3 control-label">JSON:</label>
+								        	<div class="col-sm-9">
+									        	<textarea id="calculation_result_container" class="form-control" type="text" rows="5" placeholder="JSON data will appear here." readonly></textarea>
 									        </div>
 								        </div>
 						        	</form>
@@ -205,6 +213,72 @@ $.ajax({
   }
 }
 							</pre>
+
+		        </div>
+		      </div>
+          <div class="row marketing hidden-xs">
+		        <div class="col-lg-12">
+		          <h4>Country codes</h4>
+		          <p>You can retrieve a map of country codes through the <a href="/countries">/countries</a> endpoint</p>
+		          <pre>
+$.ajax({
+	url: 'https://openiban.com/countries',
+	success: function(data) {
+		// ...
+	},
+	error: function(xhr) {
+		// handle error
+	}
+});
+		          </pre>
+		          <h4>Response</h4>
+		          <p>The response has the format of:</p>
+
+		          <pre>
+{
+  "Albania": "AL",
+  "Algeria": "DZ",
+  // ...
+}
+							</pre>
+
+		        </div>
+		      </div>
+          <div class="row marketing hidden-xs">
+		        <div class="col-lg-12">
+		          <h4>IBAN Calculation <small>(beta)</small></h4>
+		          <p>For calculation of IBAN numbers you can use the <a href="/calculate/DE/37040044/0532013000">/calculate</a> endpoint:</p>
+		          <pre>
+$.ajax({
+	url: 'https://openiban.com/calculate/<b>&lt;country&gt;</b>/<b>&lt;bankCode&gt;</b>/<b>&lt;accountNumber&gt;</b>',
+	success: function(data) {
+    var result = data;
+		if(result.valid) {
+			// YOUR LOGIC
+			//
+		}
+	},
+	error: function(xhr) {
+		// handle error
+	}
+});
+		          </pre>
+		          <h4>Response</h4>
+		          <p>A successful calculation returns status code 200 and</p>
+	            <pre>
+{
+  "valid": <b>true</b>,
+  "iban": "&lt;IBAN&gt;"
+}
+							</pre>
+              <p class="text-danger">Please make sure that you validate the calculated IBAN by presenting it to the user or by validating it again.</p>
+              <p>An error is indicated by a status of 200 and</p>
+              <pre>
+{
+  "valid": <b>false</b>,
+  "message": "&lt;error message&gt;",
+}
+              </pre>
 
 		        </div>
 		      </div>
