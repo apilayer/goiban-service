@@ -158,7 +158,7 @@ var goiban = {
 	},
   calculate: function(countryCode, bankCode, accountNumber, callback) {
     $.ajax({
-			url: '/calculate/' + countryCode + "/" + bankCode + "/" + accountNumber,
+			url: '/v2/calculate/' + countryCode + "/" + bankCode + "/" + accountNumber,
 			success: function(data) {
 				callback(data);
 			},

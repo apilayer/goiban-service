@@ -42,6 +42,7 @@
 		        <h2>IBAN Validation and Calculation<small>(beta)</small></h2>
 		        <p class="lead">Validate and calculate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
 		      </div>
+          <p><b> Update (2016/03/20) </b>: IBAN Codes (<a href="/v2/calculate/DE/1/9" class="smaller">sample</a>) are automatically validated after calculating.</p>
           <p><b> Update (2016/01/07) </b>: Calculate IBAN Codes Beta (<a href="calculate/be/539/007547034" class="smaller">sample</a>)</p>
           <p class="text-danger">This is Beta functionality, so please make sure that you validate the result manually or by using the validation service.</p>
           <p><b> Update (2016/01/05) </b>: Updated BIC data for Belgium, Germany and Netherlands.</p>
@@ -254,38 +255,41 @@ $.ajax({
 		        <div class="col-lg-12">
 		          <h4>IBAN Calculation <small>(beta)</small></h4>
 		          <p>For calculation of IBAN numbers you can use the <a href="/calculate/DE/37040044/0532013000">/calculate</a> endpoint:</p>
-		          <pre>
+		          <pre style="white-space: pre; overflow-x: scroll;">
 $.ajax({
-	url: 'https://openiban.com/calculate/<b>&lt;country&gt;</b>/<b>&lt;bankCode&gt;</b>/<b>&lt;accountNumber&gt;</b>',
-	success: function(data) {
+  url: 'https://openiban.com/v2/calculate/<b>&lt;country&gt;</b>/<b>&lt;bankCode&gt;</b>/<b>&lt;accountNumber&gt;</b>',
+  success: function(data) {
     var result = data;
-		if(result.valid) {
-			// YOUR LOGIC
-			//
-		}
-	},
-	error: function(xhr) {
-		// handle error
-	}
+    if(result.valid) {
+      // YOUR LOGIC
+    }
+  },
+  error: function(xhr) {
+    // handle error
+  }
 });
 		          </pre>
 		          <h4>Response</h4>
-		          <p>A successful calculation returns status code 200 and</p>
+		          <p>A successful calculation returns status code 200 and a result similar to the <i>/validation</i> endpoint.</p>
 	            <pre>
 {
-  "valid": <b>true</b>,
-  "iban": "&lt;IBAN&gt;"
+  "valid": true, 		// either true or false
+  "messages": [ 		// states the reason if "valid" is false
+    "Bank code valid: &lt;bankCode&gt;"
+  ],
+  "iban": "&lt;iban&gt;",	// the IBAN which was generated
+  "bankData": {
+    "bankCode": "&lt;bankCode&gt;",
+    "name": "&lt;bankName&gt;",
+    "zip": "&lt;zipCode&gt;",
+    "city": "&lt;city&gt;",
+    "bic": "&lt;BIC&gt;"
+  },
+  "checkResults": {
+    "bankCode": true 		// info about your additional check requests
+  }
 }
 							</pre>
-              <p class="text-danger">Please make sure that you validate the calculated IBAN by presenting it to the user or by validating it again.</p>
-              <p>An error is indicated by a status of 200 and</p>
-              <pre>
-{
-  "valid": <b>false</b>,
-  "message": "&lt;error message&gt;",
-}
-              </pre>
-
 		        </div>
 		      </div>
 		      <div class="row marketing" id="additional-info">

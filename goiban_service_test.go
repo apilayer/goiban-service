@@ -26,6 +26,7 @@ package main
 
 import (
 	"bufio"
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -39,10 +40,13 @@ var server *httptest.Server
 
 func TestMain(m *testing.M) {
 	router := httprouter.New()
+	router.GET("/v2/calculate/:countryCode/:bankCode/:accountNumber", calculateAndValidateIBAN)
 	router.GET("/calculate/:countryCode/:bankCode/:accountNumber", calculateIBAN)
 	router.GET("/validate/:iban", validationHandler)
 	router.GET("/countries", countryCodeHandler)
 	server = httptest.NewServer(router)
+
+	db, err = sql.Open("mysql", "root:root@/goiban?charset=utf8")
 
 	retCode := m.Run()
 	server.Close()

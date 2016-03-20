@@ -98,6 +98,7 @@ func listen(port string, environment string, dbUrl string) {
 	router.GET("/validate/:iban", validationHandler)
 	router.GET("/countries", countryCodeHandler)
 	router.GET("/calculate/:countryCode/:bankCode/:accountNumber", calculateIBAN)
+	router.GET("/v2/calculate/:countryCode/:bankCode/:accountNumber", calculateAndValidateIBAN)
 	router.Handler("GET", "/metrics", http.Handler(inmemMetrics))
 
 	//Only host the static template when the ENV is 'Live' or 'Test'

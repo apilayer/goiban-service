@@ -75,3 +75,66 @@ func TestGenerateIBANTooMuchData(t *testing.T) {
 		t.Errorf("expected request to fail")
 	}
 }
+
+func TestGenerateIBANV2WithValidation(t *testing.T) {
+	resp, err := http.Get(server.URL + "/v2/calculate/DE/1/9?getBIC=true&validateBankCode=true")
+
+	if err != nil {
+		t.Errorf("failed to generate iban %v", err)
+		t.FailNow()
+	}
+
+	var res goiban.ValidationResult
+	data, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(data, &res)
+
+	if res.Valid {
+		t.Errorf("expected request to fail")
+	}
+}
+
+func TestGenerateIBANV2NoValidation(t *testing.T) {
+	resp, err := http.Get(server.URL + "/v2/calculate/DE/1/9")
+
+	if err != nil {
+		t.Errorf("failed to generate iban %v", err)
+		t.FailNow()
+	}
+
+	var res goiban.ValidationResult
+	data, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(data, &res)
+
+	if res.Iban != "DE0819" {
+		t.Errorf("expected returned iban to equal DE0819")
+	}
+
+	if res.Valid {
+		t.Errorf("expected request to fail")
+	}
+}
+
+func TestGenerateIBANV2GetBIC(t *testing.T) {
+	resp, err := http.Get(server.URL + "/v2/calculate/DE/37040044/0532013000?getBIC=true")
+
+	if err != nil {
+		t.Errorf("failed to generate iban %v", err)
+		t.FailNow()
+	}
+
+	var res goiban.ValidationResult
+	data, _ := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(data, &res)
+
+	if res.Iban != "DE89370400440532013000" {
+		t.Errorf("expected returned iban to equal DE89370400440532013000, was " + res.Iban)
+	}
+
+	if res.BankData.Bic != "COBADEFFXXX" {
+		t.Errorf("expected returned bic to equal COBADEFFXXX, was " + res.BankData.Bic)
+	}
+
+	if !res.Valid {
+		t.Errorf("expected request to succeed")
+	}
+}
