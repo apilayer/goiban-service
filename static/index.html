@@ -42,13 +42,12 @@
 		        <h2>IBAN Validation and Calculation<small>(beta)</small></h2>
 		        <p class="lead">Validate and calculate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
 		      </div>
+					<p><b> Update (2016/07/08) </b>: Added BIC data for Luxembourg.
           <p><b> Update (2016/03/20) </b>: IBAN Codes (<a href="/v2/calculate/DE/1/9" class="smaller">sample</a>) are automatically validated after calculating.</p>
           <p><b> Update (2016/01/07) </b>: Calculate IBAN Codes Beta (<a href="calculate/be/539/007547034" class="smaller">sample</a>)</p>
           <p class="text-danger">This is Beta functionality, so please make sure that you validate the result manually or by using the validation service.</p>
           <p><b> Update (2016/01/05) </b>: Updated BIC data for Belgium, Germany and Netherlands.</p>
-					<p><b> Update (2015/04/15) </b>: Netherlands bank code validation (<a href="validate/NL78INGB0675281091?getBIC=true&validateBankCode=true" class="smaller">sample</a>)</p>
-					<p><b> Update (2015/04/13) </b>: Belgian bank code validation (<a href="validate/BE68844010370034?getBIC=true&validateBankCode=true" class="smaller">sample</a>), <a href="/metrics">Usage Metrics</a>.</p>
-
+			
 		      <div class="row marketing">
 		      	<div class "col-lg-6">
 			      	<div class="panel-group " id="accordion">
@@ -304,6 +303,7 @@ $.ajax({
 								<li>Belgium</li>
 		          	<li>Germany</li>
 								<li>Netherlands</li>
+								<li>Luxembourg</li>
 		          </ul>
 
 		        </div>
@@ -315,6 +315,7 @@ $.ajax({
 								<li>Belgium</li>
 		          	<li>Germany</li>
 								<li>Netherlands</li>
+								<li>Luxembourg</li>
 		          </ul>
 
 		        </div>
