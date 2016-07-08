@@ -24,8 +24,8 @@
     <![endif]-->
 </head>
 	<body>
-    <div class="alert-fixed alert alert-danger">
-      <p><b>Switch to SSL-only incoming!</b> openiban.com will switch to SSL-only mode on <b>March 27th 2016</b>.</p>
+    <div class="alert-fixed alert alert-info">
+      <p><b>Switched to SSL-only!</b> openiban.com has switched to SSL-only mode on <b>March 27th 2016</b>. Need <a href="https://github.com/fourcube/goiban-service/issues">support</a>?</p>
     </div>
 		<div class="container">
 		      <div class="header">
@@ -43,6 +43,7 @@
 		        <p class="lead">Validate and calculate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
 		      </div>
 					<p><b> Update (2016/07/08) </b>: Added BIC data for Luxembourg.
+          <p><b> Update (2016/06/19) </b>: Updated BIC data for Belgium, Germany and Netherlands.</p>
           <p><b> Update (2016/03/20) </b>: IBAN Codes (<a href="/v2/calculate/DE/1/9" class="smaller">sample</a>) are automatically validated after calculating.</p>
           <p><b> Update (2016/01/07) </b>: Calculate IBAN Codes Beta (<a href="calculate/be/539/007547034" class="smaller">sample</a>)</p>
           <p class="text-danger">This is Beta functionality, so please make sure that you validate the result manually or by using the validation service.</p>
@@ -157,7 +158,7 @@
 		          <p>No personal data is stored. No request logs are written. Everything works in memory.</p>
 
 		          <h4>Open Source</h4>
-		          <p>You can use <a href="http://github.com/fourcube/goiban-service">goiban-service</a> for a self hosted service. Or get the <a href="http://github.com/fourcube/goiban">source</a> and and installation of <a href="http://golang.org">go</a> and wrap it with your own web-service implementation. If you have any requests or problems with the service, please file an issue at <a href="http://github.com/fourcube/goiban-service/issues">github</a> or drop an e-mail at <span class="glyphicon glyphicon-send"></span> support(at)openiban.com .</p>
+		          <p>You can use <a href="https://github.com/fourcube/goiban-service">goiban-service</a> for a self hosted service. Or get the <a href="http://github.com/fourcube/goiban">source</a> and and installation of <a href="http://golang.org">go</a> and wrap it with your own web-service implementation. If you have any requests or problems with the service, please file an issue at <a href="http://github.com/fourcube/goiban-service/issues">github</a> or drop an e-mail at <span class="glyphicon glyphicon-send"></span> support(at)openiban.com .</p>
 		        </div>
 
 		        <div class="col-lg-6">
@@ -322,7 +323,7 @@ $.ajax({
 		      </div>
 		      <div class="footer">
 		        <div class="pull-left">
-		        	<p>&copy; Chris Grieger 2015</p>
+		        	<p>&copy; Chris Grieger 2016</p>
 		        </div>
 		      </div>
 
