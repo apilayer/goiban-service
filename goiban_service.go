@@ -39,6 +39,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/julienschmidt/httprouter"
 	"github.com/pmylund/go-cache"
+	"github.com/rs/cors"
 )
 
 /**
@@ -94,6 +95,10 @@ func listen(port string, environment string, dbUrl string) {
 	}
 
 	router := httprouter.New()
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET"},
+	})
 
 	router.GET("/validate/:iban", validationHandler)
 	router.GET("/countries", countryCodeHandler)
@@ -106,7 +111,8 @@ func listen(port string, environment string, dbUrl string) {
 		router.NotFound = http.FileServer(http.Dir("static"))
 	}
 
-	err = http.ListenAndServe(":"+port, router)
+	handler := corsHandler.Handler(router)
+	err = http.ListenAndServe(":"+port, handler)
 
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
