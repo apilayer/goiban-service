@@ -7,44 +7,36 @@ Running the service
 -------
 
 You have to install go >= 1.2, setup your GOPATH and install a MySQL server.
-Goiban requires a database called 'goiban'.
+Goiban requires a database called 'goiban'. The following commands assume a 
+MySQL database running on `localhost:3306` with database `goiban` and 
+user `root` with password `root`.
 
 ```
-go get github.com/fourcube/goiban-data-loader
-cd $GOPATH/src/github.com/fourcube/goiban-data-loader
-go build
-
-# apply schema to database
-mysql -uroot -proot goiban < schema/1.sql
+$ go get -u github.com/fourcube/goiban-data-loader
+$ cd $GOPATH/src/github.com/fourcube/goiban-data-loader
+$ DATABASE_URL="root:root@tcp(localhost:3306)/goiban?charset=utf8" make migrate
 
 # load data
-./goiban-data-loader bundesbank root:root@/goiban?charset=utf8
+$ go build
+$ ./goiban-data-loader bundesbank root:root@/goiban?charset=utf8
 
-go get github.com/fourcube/goiban-service
-cd $GOPATH/src/github.com/fourcube/goiban-service
-go build
-./goiban-service 8080 root:root@/goiban?charset=utf8
+$ go get github.com/fourcube/goiban-service
+$ cd $GOPATH/src/github.com/fourcube/goiban-service
+$ go build
+$ ./goiban-service 8080 root:root@/goiban?charset=utf8
 ```
 
-Using metrics
+MySQL development instance
 -------
+To quickly run a MySQL database inside a docker container you can use
+the following command:
 
-You can use [KeenIO](http://keen.io) metrics if you want. Just use the following
-command when starting goiban-service:
-
-```
-./goiban-service 8080 root:root@/goiban?charset=utf8 <ENV> <ProjectID> <WriteAPIKey>
-```
-
-The metrics will be logged in a collection named after the <ENV> parameter. You should not use "Test" or "Live" because those environments enable the HTML frontend.
-
-In-memory metrics are automatically available under `http://<host>:<port>/metrics`.
-
+`docker run -d --name openiban-mysql -p3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=goiban mysql`
 
 
 The MIT License (MIT)
 ------
-Copyright (c) 2015 Chris Grieger
+Copyright (c) 2013-2017 Chris Grieger
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
