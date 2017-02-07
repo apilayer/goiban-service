@@ -105,8 +105,8 @@ func TestGenerateIBANV2NoValidation(t *testing.T) {
 	data, _ := ioutil.ReadAll(resp.Body)
 	json.Unmarshal(data, &res)
 
-	if res.Iban != "DE0819" {
-		t.Errorf("expected returned iban to equal DE0819")
+	if res.Iban != "DE22000000010000000009" {
+		t.Errorf("expected returned iban to equal DE22000000010000000009, got " + res.Iban)
 	}
 
 	if res.Valid {
