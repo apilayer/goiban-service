@@ -33,6 +33,11 @@ import (
 	"os"
 	"testing"
 
+	"encoding/json"
+
+	"strings"
+
+	"github.com/fourcube/goiban"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -57,9 +62,21 @@ func TestMain(m *testing.M) {
 func BenchmarkValidation(b *testing.B) {
 	list, _ := readLines("test/iban_test.txt")
 	b.ResetTimer()
+	var result goiban.ValidationResult
+
 	for _, iban := range list {
 
 		resp, _ := http.Get(server.URL + "/validate/" + iban)
+		decoder := json.NewDecoder(resp.Body)
+
+		err = decoder.Decode(&result)
+		if err != nil {
+			b.Errorf("Expected success %v", err)
+		}
+
+		if !result.Valid {
+			b.Errorf("Validation failed %v", result)
+		}
 		resp.Body.Close()
 	}
 }
@@ -73,6 +90,22 @@ func TestSafeContentTypeOnSuccess(t *testing.T) {
 	if contentType != expectedContentType {
 		t.Errorf("Content type was %v instead of %v", contentType, expectedContentType)
 	}
+}
+
+func TestIbanTooShort(t *testing.T) {
+	resp, _ := http.Get(server.URL + "/validate/IT96370400440532013000")
+	decoder := json.NewDecoder(resp.Body)
+	var result goiban.ValidationResult
+
+	err = decoder.Decode(&result)
+	if err != nil {
+		t.Errorf("Expected success %v", err)
+	}
+
+	if !strings.Contains(result.Messages[0], "Expected length") {
+		t.Errorf("Expected length error %v", result)
+	}
+
 }
 
 // code taken from
