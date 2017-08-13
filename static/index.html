@@ -2,7 +2,7 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Validate and Calculate IBAN numbers without any restrictions or captchas. Use our free rest webservice or integrate the check directly into your website. You can input the IBAN into a form an perform validation or send a direct request. Also check out our secure HTTPS service at https://openiban.com .">
+    <meta name="description" content="Validate and Calculate IBAN numbers without any restrictions or captchas. Use our free RESTful webservice or integrate the check directly into your website. You can input the IBAN into a form and perform validation or send a direct request. Also check out our secure HTTPS service at https://openiban.com .">
     <meta name="author" content="Chris Grieger">
     <link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
@@ -38,9 +38,10 @@
 		      <div class="jumbotron hidden-xs">
 		        <h2>IBAN Validation and Calculation<small>(beta)</small></h2>
 		        <p class="lead">Validate and calculate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
-		      </div>
+					</div>
+					<p><b> Update (2017/08/13) </b>: Added BIC data for Austria and Liechtenstein.
 					<p><b> Update (2017/02/23) </b>: Update BIC data for Belgium.
-					<p><b> Update (2017/02/03) </b>: Add BIC data for Switzerland. Improve IBAN generation for countries where the bank code and IBAN lengths are known.
+					<p><b> Update (2017/02/03) </b>: Added BIC data for Switzerland. Improve IBAN generation for countries where the bank code and IBAN lengths are known.
 					<p><b> Update (2017/01/10) </b>: Updated BIC data for Luxembourg and Germany.
 					<p><b> Update (2016/07/08) </b>: Added BIC data for Luxembourg.
           <p><b> Update (2016/06/19) </b>: Updated BIC data for Belgium, Germany and Netherlands.</p>
@@ -306,6 +307,8 @@ $.ajax({
 								<li>Netherlands</li>
 								<li>Luxembourg</li>
 								<li>Switzerland</li>
+								<li>Austria</li>
+								<li>Liechtenstein</li>
 		          </ul>
 
 		        </div>
@@ -319,13 +322,15 @@ $.ajax({
 								<li>Netherlands</li>
 								<li>Luxembourg</li>
 								<li>Switzerland</li>
+								<li>Austria</li>
+								<li>Liechtenstein</li>
 		          </ul>
 
 		        </div>
 		      </div>
 		      <div class="footer">
 		        <div class="pull-left">
-		        	<p>&copy; Chris Grieger 2016</p>
+		        	<p>&copy; Chris Grieger 2017</p>
 		        </div>
 		      </div>
 
