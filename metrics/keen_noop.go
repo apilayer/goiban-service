@@ -1,4 +1,4 @@
-// +build !no_metrics
+// +build no_metrics
 
 /*
 The MIT License (MIT)
@@ -26,11 +26,7 @@ THE SOFTWARE.
 package metrics
 
 import (
-	"encoding/json"
-	"log"
-
 	goiban "github.com/fourcube/goiban"
-	"github.com/franela/goreq"
 )
 
 // KeenMetrics is deprecated
@@ -40,41 +36,13 @@ type KeenMetrics struct {
 }
 
 func (keen *KeenMetrics) getEndpoint() string {
-	return "http://api.keen.io/3.0/projects/" + keen.ProjectID + "/events/"
+	return ""
 }
 
 //WriteLogRequest logs to keen.io
 //
 // http://api.keen.io/3.0/projects/<project_id>/events/<event_collection>
 func (keen *KeenMetrics) WriteLogRequest(collectionName string, iban *goiban.Iban) {
-	var url = keen.getEndpoint() + collectionName
-
-	req := goreq.Request{
-		Method:      "POST",
-		Uri:         url,
-		ContentType: "application/json",
-		Body:        IbanToEvent(iban),
-	}
-
-	req.AddHeader("Authorization", keen.WriteAPIKey)
-
-	res, err := req.Do()
-
-	if err != nil {
-		log.Printf("Error while posting stats: %v", err)
-		return
-	}
-
-	// Close the response body
-	if res.Body != nil {
-		defer res.Body.Close()
-	}
-
-	if collectionName == "Test" {
-		log.Printf(url)
-		text, _ := res.Body.ToString()
-		log.Printf("Response (%v): %v", res.StatusCode, text)
-	}
 
 }
 
@@ -82,36 +50,5 @@ func (keen *KeenMetrics) WriteLogRequest(collectionName string, iban *goiban.Iba
 //
 //http://api.keen.io/3.0/projects/<project_id>/events/<event_collection>
 func (keen *KeenMetrics) LogRequestFromValidationResult(collectionName string, validationResult string) {
-	var url = keen.getEndpoint() + collectionName
-
-	var result goiban.ValidationResult
-	json.Unmarshal([]byte(validationResult), &result)
-
-	req := goreq.Request{
-		Method:      "POST",
-		Uri:         url,
-		ContentType: "application/json",
-		Body:        ValidationResultToEvent(&result),
-	}
-
-	req.AddHeader("Authorization", keen.WriteAPIKey)
-
-	res, err := req.Do()
-
-	if err != nil {
-		log.Printf("Error while posting stats: %v", err)
-		return
-	}
-
-	// Close the response body
-	if res.Body != nil {
-		defer res.Body.Close()
-	}
-
-	if collectionName == "Test" {
-		log.Printf(url)
-		text, _ := res.Body.ToString()
-		log.Printf("Response (%v): %v", res.StatusCode, text)
-	}
 
 }

@@ -6,7 +6,7 @@ Implements a basic REST Web-service for validating IBAN account numbers in GO. U
 Running the service
 -------
 
-You have to install go >= 1.2, setup your GOPATH and install a MySQL server.
+You have to install go >= 1.8, setup your GOPATH and install a MySQL server.
 Goiban requires a database called 'goiban'. The following commands assume a 
 MySQL database running on `localhost:3306` with database `goiban` and 
 user `root` with password `root`.
@@ -24,6 +24,12 @@ $ go get github.com/fourcube/goiban-service
 $ cd $GOPATH/src/github.com/fourcube/goiban-service
 $ go build
 $ ./goiban-service 8080 root:root@/goiban?charset=utf8
+```
+
+To create a build without the metrics support (e.g if you run on go < 1.8) run:
+
+```
+$ go build -tags no_metrics
 ```
 
 MySQL development instance
