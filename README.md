@@ -49,7 +49,7 @@ Name                                                                            
 [OpenIBAN](https://github.com/nathanIL/openiban)                                             | Python
 [OpenIban Connector](http://store.shopware.com/webch77589500739/openiban.com-connector.html) | PHP (Plugin for Shopware)
 
-:star: official
+:star: officially supported
 
 
 The MIT License (MIT)
