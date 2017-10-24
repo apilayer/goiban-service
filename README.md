@@ -40,6 +40,18 @@ the following command:
 `docker run -d --name openiban-mysql -p3306:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=goiban mysql`
 
 
+Client Libraries
+------
+
+Name                                                                                         | Language
+-------------------------------------------------------------------------------------------- | ---------------------
+[openiban.js](https://github.com/fourcube/openiban.js) :star:                                | JavaScript/TypeScript
+[OpenIBAN](https://github.com/nathanIL/openiban)                                             | Python
+[OpenIban Connector](http://store.shopware.com/webch77589500739/openiban.com-connector.html) | PHP (Plugin for Shopware)
+
+:star: official
+
+
 The MIT License (MIT)
 ------
 Copyright (c) 2013-2017 Chris Grieger
