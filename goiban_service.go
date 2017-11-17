@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/fourcube/goiban"
 	m "github.com/fourcube/goiban-service/metrics"
@@ -88,7 +89,12 @@ func listen(port string, environment string, dbUrl string) {
 	}
 
 	handler := corsHandler.Handler(router)
-	err = http.ListenAndServe(":"+port, handler)
+
+	if strings.ContainsAny(port, ":") {
+		err = http.ListenAndServe(port, handler)
+	} else {
+		err = http.ListenAndServe(":"+port, handler)
+	}
 
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
