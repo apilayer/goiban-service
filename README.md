@@ -1,6 +1,16 @@
 goiban-service
 ==============
 
+## Service Shutdown Notice
+
+The openiban API will cease operation on the 24th of May, 10 p.m. GMT.
+
+You can read more about it at https://openiban.com.
+
+**Important**: I will continue to maintain the `goiban-service` repository.
+
+--- 
+
 Implements a basic REST Web-service for validating IBAN account numbers in GO. Uses the logic from http://github.com/fourcube/goiban. Deployed at http://openiban.com .
 
 Running the service
