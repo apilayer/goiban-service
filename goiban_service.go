@@ -1,19 +1,22 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
-	"time"
 	"strings"
+	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/fourcube/goiban-data"
+	"github.com/fourcube/goiban-data-loader/loader"
 
 	"github.com/fourcube/goiban"
 	m "github.com/fourcube/goiban-service/metrics"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/julienschmidt/httprouter"
 	"github.com/pmylund/go-cache"
 	"github.com/rs/cors"
@@ -31,44 +34,57 @@ route							description
 /*								Renders static content from the "./static" folder
 */
 var (
-	c            = cache.New(5*time.Minute, 30*time.Second)
-	db           *sql.DB
-	err          error
-	PREP_ERR     error
-	ENV          string
+	c   = cache.New(5*time.Minute, 30*time.Second)
+	err error
+
 	metrics      *m.KeenMetrics
 	inmemMetrics = m.NewInmemMetricsRegister()
+	repo         data.BankDataRepository
+	// Flags
+	dataPath string
+	mysqlURL string
+	port     string
+	help     bool
+	web      bool
 )
 
+func init() {
+	flag.StringVar(&dataPath, "dataPath", "", "Base path of the bank data")
+	flag.StringVar(&mysqlURL, "dbUrl", "", "Database connection string")
+	flag.StringVar(&port, "port", "8080", "HTTP Port or interface to listen on")
+	flag.BoolVar(&help, "h", false, "Show usage")
+	flag.BoolVar(&web, "w", false, "Serve ./static folder")
+}
+
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("usage: goiban-service <port> <dburl> [<env>] [keenProjectID] [keenWriteAPIKey]")
+	flag.Parse()
+
+	if help {
+		flag.Usage()
 		return
 	}
 
-	port := os.Args[1]
-	mysqlURL := os.Args[2]
-
-	if len(os.Args) < 6 {
-		ENV = "Test"
-	} else {
-		ENV = os.Args[3]
-		metrics = &m.KeenMetrics{
-			ProjectID:   os.Args[4],
-			WriteAPIKey: os.Args[5],
-		}
-	}
-
-	listen(port, ENV, mysqlURL)
+	listen()
 }
 
-func listen(port string, environment string, dbUrl string) {
-	log.Printf("Setting env to %v", environment)
+func listen() {
+	if mysqlURL != "" {
+		log.Printf("Using SQL data store.")
+		repo = data.NewSQLStore("mysql", mysqlURL)
+	} else {
+		log.Printf("Using in-memory data store.")
+		repo = data.NewInMemoryStore()
 
-	db, err = sql.Open("mysql", dbUrl)
-
-	if err != nil {
-		log.Fatalf("Error opening DB connection: %v", err)
+		if dataPath != "" {
+			loader.SetBasePath(dataPath)
+		}
+		loader.LoadBundesbankData(loader.DefaultBundesbankPath(), repo)
+		loader.LoadAustriaData(loader.DefaultAustriaPath(), repo)
+		loader.LoadBelgiumData(loader.DefaultBelgiumPath(), repo)
+		loader.LoadLiechtensteinData(loader.DefaultLiechtensteinPath(), repo)
+		loader.LoadLuxembourgData(loader.DefaultLuxembourgPath(), repo)
+		loader.LoadNetherlandsData(loader.DefaultNetherlandsPath(), repo)
+		loader.LoadSwitzerlandData(loader.DefaultSwitzerlandPath(), repo)
 	}
 
 	router := httprouter.New()
@@ -84,15 +100,24 @@ func listen(port string, environment string, dbUrl string) {
 	router.Handler("GET", "/metrics", http.Handler(inmemMetrics))
 
 	//Only host the static template when the ENV is 'Live' or 'Test'
-	if environment == "Live" || environment == "Test" {
+	if web {
 		router.NotFound = http.FileServer(http.Dir("static"))
 	}
 
+	listeningInfo := "Listening on %s"
 	handler := corsHandler.Handler(router)
 
 	if strings.ContainsAny(port, ":") {
+		if web {
+			listeningInfo = fmt.Sprintf(listeningInfo, "%s (serving static content from '/').")
+		}
+		log.Printf(listeningInfo, port)
 		err = http.ListenAndServe(port, handler)
 	} else {
+		if web {
+			listeningInfo = fmt.Sprintf(listeningInfo, ":%s (serving static content from '/').")
+		}
+		log.Printf(listeningInfo, port)
 		err = http.ListenAndServe(":"+port, handler)
 	}
 
@@ -125,7 +150,7 @@ func validationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	// hit the cache
 	value, found := hitCache(iban + strconv.FormatBool(config["getBIC"]) + strconv.FormatBool(config["validateBankCode"]))
 	if found {
-		go logFromCacheEntry(ENV, value)
+		go logFromCacheEntry("", value)
 		fmt.Fprintf(w, value)
 		return
 	}
@@ -175,7 +200,7 @@ func validationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	w.Header().Add("Content-Length", strconv.Itoa(len(strRes)))
 	// put to cache and render
 
-	go logFromIbanResult(ENV, parsedIban)
+	go logFromIbanResult("", parsedIban)
 
 	key := iban + strconv.FormatBool(config["getBIC"]) + strconv.FormatBool(config["validateBankCode"])
 
@@ -198,12 +223,12 @@ func toBoolean(value string) bool {
 func additionalData(iban *goiban.Iban, intermediateResult *goiban.ValidationResult, config map[string]bool) *goiban.ValidationResult {
 	validateBankCode, ok := config["validateBankCode"]
 	if ok && validateBankCode {
-		intermediateResult = goiban.ValidateBankCode(iban, intermediateResult, db)
+		intermediateResult = goiban.ValidateBankCode(iban, intermediateResult, repo)
 	}
 
 	getBic, ok := config["getBIC"]
 	if ok && getBic {
-		intermediateResult = goiban.GetBic(iban, intermediateResult, db)
+		intermediateResult = goiban.GetBic(iban, intermediateResult, repo)
 	}
 	return intermediateResult
 }

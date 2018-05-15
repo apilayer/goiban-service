@@ -26,12 +26,14 @@ package main
 
 import (
 	"bufio"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/fourcube/goiban-data"
+	"github.com/fourcube/goiban-data-loader/loader"
 
 	"encoding/json"
 
@@ -42,6 +44,7 @@ import (
 )
 
 var server *httptest.Server
+var repoSQL data.BankDataRepository
 
 func TestMain(m *testing.M) {
 	router := httprouter.New()
@@ -51,7 +54,9 @@ func TestMain(m *testing.M) {
 	router.GET("/countries", countryCodeHandler)
 	server = httptest.NewServer(router)
 
-	db, err = sql.Open("mysql", "root:root@/goiban?charset=utf8")
+	// repoSQL = data.NewSQLStore("mysql", "root:root@/goiban?charset=utf8")
+	repo = data.NewInMemoryStore()
+	loader.LoadBundesbankData(loader.DefaultBundesbankPath(), repo)
 
 	retCode := m.Run()
 	server.Close()
