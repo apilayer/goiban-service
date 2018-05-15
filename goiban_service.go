@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -41,19 +43,22 @@ var (
 	inmemMetrics = m.NewInmemMetricsRegister()
 	repo         data.BankDataRepository
 	// Flags
-	dataPath string
-	mysqlURL string
-	port     string
-	help     bool
-	web      bool
+	dataPath   string
+	staticPath string
+	mysqlURL   string
+	port       string
+	help       bool
+	web        bool
 )
 
 func init() {
 	flag.StringVar(&dataPath, "dataPath", "", "Base path of the bank data")
+	flag.StringVar(&staticPath, "staticPath", "", "Base path of the static web content")
 	flag.StringVar(&mysqlURL, "dbUrl", "", "Database connection string")
+
 	flag.StringVar(&port, "port", "8080", "HTTP Port or interface to listen on")
 	flag.BoolVar(&help, "h", false, "Show usage")
-	flag.BoolVar(&web, "w", false, "Serve ./static folder")
+	flag.BoolVar(&web, "w", false, "Serve staticPath folder")
 }
 
 func main() {
@@ -62,6 +67,19 @@ func main() {
 	if help {
 		flag.Usage()
 		return
+	}
+
+	if web && staticPath == "" {
+		// Try to serve from the package src directory
+		path := filepath.Join(os.Getenv("GOPATH"), "src", "github.com", "fourcube", "goiban-service", "static")
+		f, err := os.Open(path)
+		defer f.Close()
+
+		if err != nil {
+			log.Fatalf("Cannot serve static content from %s: %v. Please set a correct folder with the -staticPath option.", path, err)
+		}
+
+		staticPath = path
 	}
 
 	listen()
@@ -101,7 +119,8 @@ func listen() {
 
 	//Only host the static template when the ENV is 'Live' or 'Test'
 	if web {
-		router.NotFound = http.FileServer(http.Dir("static"))
+		log.Printf("Serving static content from folder %s.", staticPath)
+		router.NotFound = http.FileServer(http.Dir(staticPath))
 	}
 
 	listeningInfo := "Listening on %s"

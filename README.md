@@ -13,7 +13,29 @@ You can read more about it at https://openiban.com.
 
 Implements a basic REST Web-service for validating IBAN account numbers in GO. Uses the logic from http://github.com/fourcube/goiban. Deployed at http://openiban.com .
 
-Running the service
+Running the service (Embedded Data)
+-------
+
+Via `go get`:
+
+```bash
+> go get -u github.com/fourcube/goiban-service
+# Launch the service listening on port 8080 and serve static content
+> $GOPATH/bin/goiban-service -p 8080 -w 
+```
+
+Download a binary package:
+
+```bash
+$ curl -o goiban-service.tar.gz "https://github.com/fourcube/goiban-service/releases/latest-<ARCH>.tar.gz"
+$ tar -xzf goiban-service.tar.gz
+$ cd goiban-service
+# Launch the service listening on port 8080, using the bank data from ./data and serving
+# the web interface from ./static
+$ ./goiban-service -dataPath ./data -p 8080 -w
+```
+
+Running the service (MySQL)
 -------
 
 You have to install go >= 1.8, setup your GOPATH and install a MySQL server.
