@@ -13,30 +13,54 @@ You can read more about it at https://openiban.com.
 
 Implements a basic REST Web-service for validating IBAN account numbers in GO. Uses the logic from http://github.com/fourcube/goiban. Deployed at http://openiban.com .
 
-Running the service (Embedded Data)
--------
+# Running the service
 
-Via `go get`:
+## Via `go get`:
 
 ```bash
-> go get -u github.com/fourcube/goiban-service
+$ go get -u github.com/fourcube/goiban-service
 # Launch the service listening on port 8080 and serve static content
-> $GOPATH/bin/goiban-service -p 8080 -w 
+$ $GOPATH/bin/goiban-service -p 8080 -w 
 ```
 
-Download a binary package:
+## Download a binary package:
 
 ```bash
-$ curl -o goiban-service.tar.gz "https://github.com/fourcube/goiban-service/releases/latest-<ARCH>.tar.gz"
-$ tar -xzf goiban-service.tar.gz
+# Make sure to choose the correct operating system and architecture
+$ curl -o goiban-service.tar.gz "https://github.com/fourcube/goiban-service/releases/download/v1.0.0/goiban-service-linux-386.tar.gz"
+$ tar -xzf goiban-service*.tar.gz
 $ cd goiban-service
 # Launch the service listening on port 8080, using the bank data from ./data and serving
 # the web interface from ./static
-$ ./goiban-service -dataPath ./data -p 8080 -w
+$ ./goiban-service -dataPath ./data -staticPath ./static -p 8080 -w
 ```
 
-Running the service (MySQL)
--------
+## Via Docker
+
+https://hub.docker.com/r/fourcube/openiban/
+
+```
+
+$ docker run --name openiban -d -p8080:8080 fourcube/openiban
+$ curl localhost:8080/validate/DE89370400440532013000
+```
+
+You will see something like:
+
+```json
+{
+  "valid": true,
+  "messages": [],
+  "iban": "DE89370400440532013000",
+  "bankData": {
+    "bankCode": "",
+    "name": ""
+  },
+  "checkResults": {}
+}
+```
+
+# Building the service (MySQL)
 
 You have to install go >= 1.8, setup your GOPATH and install a MySQL server.
 Goiban requires a database called 'goiban'. The following commands assume a 
@@ -55,7 +79,7 @@ $ ./goiban-data-loader bundesbank root:root@/goiban?charset=utf8
 $ go get github.com/fourcube/goiban-service
 $ cd $GOPATH/src/github.com/fourcube/goiban-service
 $ go build
-$ ./goiban-service 8080 root:root@/goiban?charset=utf8
+$ ./goiban-service -p 8080 -dbURL root:root@/goiban?charset=utf8
 ```
 
 To create a build without the metrics support (e.g if you run on go < 1.8) run:
