@@ -1,4 +1,4 @@
-.PHONY: dev build
+.PHONY: dev build docker
 
 dev:
 	go build
@@ -6,3 +6,6 @@ dev:
 
 build:
 	./build.sh
+
+docker:
+	docker build -t fourcube/openiban:latest .
