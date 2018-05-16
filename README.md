@@ -27,8 +27,8 @@ $ $GOPATH/bin/goiban-service -p 8080 -w
 
 ```bash
 # Make sure to choose the correct operating system and architecture
-$ curl -o goiban-service.tar.gz "https://github.com/fourcube/goiban-service/releases/download/v1.0.0/goiban-service-linux-386.tar.gz"
-$ tar -xzf goiban-service*.tar.gz
+$ curl -Lo goiban-service.tar.gz "https://github.com/fourcube/goiban-service/releases/download/v1.0.0/goiban-service-linux-386.tar.gz"
+$ tar -xzf goiban-service.tar.gz
 $ cd goiban-service
 # Launch the service listening on port 8080, using the bank data from ./data and serving
 # the web interface from ./static
