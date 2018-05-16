@@ -16,8 +16,9 @@ set $config
 
 os="$1"
 arch="$2"
-path="build/$os/$arch"
-mkdir -p "build/$os/$arch"
+base_path="build/$os/$arch"
+path="$base_path/goiban-service"
+mkdir -p "$path"
 bin_name="goiban-service"
 
 if [ $os = "windows" ]; then
@@ -27,7 +28,7 @@ fi
 GOOS="$os" GOARCH="$arch" go build -o "$path/$bin_name"
 cp -r $GOPATH/src/github.com/fourcube/goiban-data-loader/data "$path/"
 cp -r ./static "$path/"
-tar -czf "build/goiban-service-$os-$arch.tar.gz" "$path"
+tar czvf "build/goiban-service-$os-$arch.tar.gz" -C "$base_path" goiban-service
 
 unset IFS;
 done
