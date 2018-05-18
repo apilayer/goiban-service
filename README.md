@@ -25,6 +25,8 @@ $ $GOPATH/bin/goiban-service -p 8080 -w
 
 ## Download a binary package:
 
+A list of all releases is available [here](https://github.com/fourcube/goiban-service/releases).
+
 ```bash
 # Make sure to choose the correct operating system and architecture
 $ curl -Lo goiban-service.tar.gz "https://github.com/fourcube/goiban-service/releases/download/v1.0.0/goiban-service-linux-386.tar.gz"
