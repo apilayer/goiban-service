@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: openiban
+  name: openiban
+spec:
+  ports:
+  - nodePort: 32111
+    protocol: TCP
+    port: 8080
+    name: http
+  selector:
+    app: openiban
+  type: NodePort
