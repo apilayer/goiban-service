@@ -20,7 +20,7 @@ Implements a basic REST Web-service for validating IBAN account numbers in GO. U
 ```bash
 $ go get -u github.com/fourcube/goiban-service
 # Launch the service listening on port 8080 and serve static content
-$ $GOPATH/bin/goiban-service -p 8080 -w 
+$ $GOPATH/bin/goiban-service -port 8080 -w 
 ```
 
 ## Download a binary package:
@@ -34,7 +34,7 @@ $ tar -xzf goiban-service.tar.gz
 $ cd goiban-service
 # Launch the service listening on port 8080, using the bank data from ./data and serving
 # the web interface from ./static
-$ ./goiban-service -dataPath ./data -staticPath ./static -p 8080 -w
+$ ./goiban-service -dataPath ./data -staticPath ./static -port 8080 -w
 ```
 
 ## Via Docker
@@ -81,7 +81,7 @@ $ ./goiban-data-loader bundesbank root:root@/goiban?charset=utf8
 $ go get github.com/fourcube/goiban-service
 $ cd $GOPATH/src/github.com/fourcube/goiban-service
 $ go build
-$ ./goiban-service -p 8080 -dbURL root:root@/goiban?charset=utf8
+$ ./goiban-service -port 8080 -dbURL root:root@/goiban?charset=utf8
 ```
 
 To create a build without the metrics support (e.g if you run on go < 1.8) run:
