@@ -62,6 +62,16 @@ You will see something like:
 }
 ```
 
+## Via Kubernetes
+
+You can deploy above docker file in your kubernetes cluster by using the configuration files container in [./k8s](./k8s).
+
+Run the following command to apply the deployment and service (`NodePort service` running on port 32111)
+
+```bash
+kubectl apply -f ./k8s
+```
+
 # Building the service (MySQL)
 
 You have to install go >= 1.8, setup your GOPATH and install a MySQL server.

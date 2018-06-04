@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: openiban
+  name: openiban
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiban
+  template:
+    metadata:
+      labels:
+        app: openiban
+    spec:
+      containers:
+      - image: fourcube/openiban:latest
+        name: openiban
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 200m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
