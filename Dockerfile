@@ -3,8 +3,11 @@ FROM golang:alpine
 WORKDIR /go/src/goiban-service
 COPY ./*.go ./
 
-RUN apk add --no-cache git
-RUN go get -d -v ./...
-RUN go install -v ./...
+RUN adduser -D openiban \
+&& apk add --no-cache git \
+&& go get -d -v ./... \
+&& go install -v ./...
 
-CMD ["sh", "-c", "goiban-service"]
+USER openiban
+
+CMD ["/go/bin/goiban-service"]
