@@ -29,7 +29,7 @@ func CreatePidfile(pidFile string) {
 		defer f.Close()
 
 		if pidBytes, err := ioutil.ReadAll(f); err != nil {
-			log.Fatalf("Failed to read from pidfile %v")
+			log.Fatalf("Failed to read from pidfile %v", err)
 		} else {
 			if len(pidBytes) == 0 {
 				goto foo
@@ -52,10 +52,10 @@ func CreatePidfile(pidFile string) {
 
 	foo:
 		if err = f.Truncate(0); err != nil {
-			log.Fatalf("Failed to truncate pidfile", err)
+			log.Fatalf("Failed to truncate pidfile %v", err)
 		}
 		if _, err = f.Seek(0, 0); err != nil {
-			log.Fatalf("Failed to seek pidfile", err)
+			log.Fatalf("Failed to seek pidfile %v", err)
 		}
 
 		_, err = fmt.Fprintf(f, "%d", os.Getpid())
