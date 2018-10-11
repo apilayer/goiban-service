@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -42,22 +44,28 @@ var (
 	metrics      *m.KeenMetrics
 	inmemMetrics = m.NewInmemMetricsRegister()
 	repo         data.BankDataRepository
+	// Set at link time
+	Version string = "dev"
 	// Flags
-	dataPath   string
-	staticPath string
-	mysqlURL   string
-	port       string
-	help       bool
-	web        bool
+	dataPath     string
+	staticPath   string
+	mysqlURL     string
+	pidFile      string
+	port         string
+	help         bool
+	web          bool
+	printVersion bool
 )
 
 func init() {
 	flag.StringVar(&dataPath, "dataPath", "", "Base path of the bank data")
 	flag.StringVar(&staticPath, "staticPath", "", "Base path of the static web content")
 	flag.StringVar(&mysqlURL, "dbUrl", "", "Database connection string")
+	flag.StringVar(&pidFile, "pidFile", "", "PID File path")
 
 	flag.StringVar(&port, "port", "8080", "HTTP Port or interface to listen on")
 	flag.BoolVar(&help, "h", false, "Show usage")
+	flag.BoolVar(&printVersion, "v", false, "Show version")
 	flag.BoolVar(&web, "w", false, "Serve staticPath folder")
 }
 
@@ -67,6 +75,15 @@ func main() {
 	if help {
 		flag.Usage()
 		return
+	}
+
+	if printVersion {
+		fmt.Println(Version)
+		return
+	}
+
+	if pidFile != "" {
+		CreatePidfile(pidFile)
 	}
 
 	if web && staticPath == "" {
@@ -126,23 +143,48 @@ func listen() {
 	listeningInfo := "Listening on %s"
 	handler := corsHandler.Handler(router)
 
+	var server http.Server
+	var addr string
+
+	idleConnsClosed := make(chan struct{})
+	go func() {
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt)
+		<-sigint
+
+		log.Printf("Received SIGINT. Waiting for connections to close...")
+
+		// We received an interrupt signal, shut down.
+		if err := server.Shutdown(context.Background()); err != nil {
+			// Error from closing listeners, or context timeout:
+			log.Printf("HTTP server Shutdown: %v", err)
+		}
+		close(idleConnsClosed)
+	}()
+
 	if strings.ContainsAny(port, ":") {
 		if web {
 			listeningInfo = fmt.Sprintf(listeningInfo, "%s (serving static content from '/').")
 		}
-		log.Printf(listeningInfo, port)
-		err = http.ListenAndServe(port, handler)
+		addr = port
 	} else {
 		if web {
 			listeningInfo = fmt.Sprintf(listeningInfo, ":%s (serving static content from '/').")
 		}
-		log.Printf(listeningInfo, port)
-		err = http.ListenAndServe(":"+port, handler)
+		addr = ":" + port
 	}
 
-	if err != nil {
+	server.Handler = handler
+	server.Addr = addr
+
+	log.Printf("goiban-service (v%s)", Version)
+	log.Printf(listeningInfo, port)
+
+	if err := server.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatal("ListenAndServe: ", err)
 	}
+
+	<-idleConnsClosed
 }
 
 // Processes requests to the /validate/ url
