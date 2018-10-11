@@ -26,6 +26,16 @@ import (
 	"github.com/rs/cors"
 )
 
+const (
+	// SigningKey can be used to validate that the goiban-service binary
+	// has been signed by the original author
+	SigningKey = `-----BEGIN PUBLIC KEY-----
+MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEZGBXuKuau9Q+cnDCHsN48ovzopce+QcU
+qab1BAkJZXNdDHxEoQFnf72TYuzl3LjTsLuIA2tpx55sG79zgJHG6hyso7aUuQ+c
+vQrNHMoC/IHD9FkIqWrBH1xZe8LE9X9t
+-----END PUBLIC KEY-----`
+)
+
 /**
 Handles requests and serves static pages.
 
@@ -47,14 +57,15 @@ var (
 	// Set at link time
 	Version string = "dev"
 	// Flags
-	dataPath     string
-	staticPath   string
-	mysqlURL     string
-	pidFile      string
-	port         string
-	help         bool
-	web          bool
-	printVersion bool
+	dataPath        string
+	staticPath      string
+	mysqlURL        string
+	pidFile         string
+	port            string
+	help            bool
+	web             bool
+	printVersion    bool
+	printSigningKey bool
 )
 
 func init() {
@@ -66,6 +77,7 @@ func init() {
 	flag.StringVar(&port, "port", "8080", "HTTP Port or interface to listen on")
 	flag.BoolVar(&help, "h", false, "Show usage")
 	flag.BoolVar(&printVersion, "v", false, "Show version")
+	flag.BoolVar(&printSigningKey, "k", false, "Show public key for signature validation")
 	flag.BoolVar(&web, "w", false, "Serve staticPath folder")
 }
 
@@ -79,6 +91,11 @@ func main() {
 
 	if printVersion {
 		fmt.Println(Version)
+		return
+	}
+
+	if printSigningKey {
+		fmt.Println(SigningKey)
 		return
 	}
 
