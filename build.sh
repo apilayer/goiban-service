@@ -10,6 +10,8 @@ CONFIGURATIONS=(
     solaris,amd64
 )
 
+version=`cat VERSION`
+
 for config in ${CONFIGURATIONS[@]}; do 
 IFS=","
 set $config
@@ -25,10 +27,10 @@ if [ $os = "windows" ]; then
     bin_name="$bin_name.exe"
 fi
 
-GOOS="$os" GOARCH="$arch" go build -o "$path/$bin_name"
+GOOS="$os" GOARCH="$arch" go build -ldflags "-X main.Version=${version}" -o "$path/$bin_name"
 cp -r $GOPATH/src/github.com/fourcube/goiban-data-loader/data "$path/"
 cp -r ./static "$path/"
-tar czvf "build/goiban-service-$os-$arch.tar.gz" -C "$base_path" goiban-service
+tar czvf "build/goiban-service-$version-$os-$arch.tar.gz" -C "$base_path" goiban-service
 
 unset IFS;
 done
