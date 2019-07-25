@@ -24,49 +24,6 @@
     <![endif]-->
 </head>
 	<body>
-		<div class="alert alert-success">
-			<div class="container">
-				<h1>Self-Hosting Instructions</h1>
-				<p>Instructions for self-hosting are now available on <a href="https://github.com/fourcube/goiban-service#running-the-service">github</a>.</p>
-				<p>If you have any questions or remarks, feel free to contact me under <code>chris (at) openiban.com</code>.</p>
-			</div>
-		</div>
-		<div class="alert alert-danger alert-shutdown">
-		<div class="container">
-				<h1><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Service Shutdown Notice</h1>
-				<p>The openiban API will cease operation on the <strong>24th of May, 10 p.m. GMT</strong>.</p>
-				<br>
-				<h2>Why?</h2>
-				<p>On May 25th the <a href="https://en.wikipedia.org/wiki/General_Data_Protection_Regulation">GDPR</a> will come into force.
-				Consequently, over the course of the last few weeks, some mails from companies
-				that use openiban have reached me, asking me to sign a data processing agreement.
-				They are legally required to do this with all of their third party data processing contractors.</p>
-				<p>For me as an operator of a free webservice that processes personal data,
-				the new legislation poses unforseeable risks that I am not willing to expose myself to.</p>
-				<p>I've been running openiban as an individual, on my own time and money, free for
-				anyone to use in any way they want. Openiban made and held the promise, that no data
-				was ever to be logged or reused for analytical purposes.</p>
-				<hr>
-				<p>Thank you for trusting and using the openiban API.</p>
-				<p>I really enjoyed hosting this webservice and seeing it's usage increase over the course
-				of the last five years. Merely handling a handful of requests per day,
-				the openiban API is now used by various companies and individuals to process close
-				to 400.000 requests per week. This growth happened organically without ever investing
-				a single thought or penny into SEO or advertisement, making me wonder
-				if this could have been a use case for bootstrapping a company.</p>
-				<h2>What's next?</h2>
-				<p>The API will be shutdown on <strong>24th of May, 10 p.m. GMT</strong>. At the same time, the IBAN validation
-				form will be removed. </p>				
-				<p>After the API shutdown, the <b>website will remain active</b> for an indefinite
-				time but it's contents will change. What I will try to do over the next week is:</p>
-				<ul>
-				<li>Provide detailed deployment instruction for self-hosting the <a href="https://github.com/fourcube/goiban-service">goiban</a> service</li>
-				<li>Provide binaries for several platforms</li>
-				<li>Provide a docker container for self-hosting the openiban service</li>
-				</ul>
-				<p>If you have any questions or remarks, feel free to contact me under <code>chris (at) openiban.com</code>.</p>
-			</div>
-		</div>
 		<div class="container">
 		      <div class="header">
 		        <ul class="nav nav-pills pull-right">
@@ -82,6 +39,7 @@
 		        <h2>IBAN Validation and Calculation<small>(beta)</small></h2>
 		        <p class="lead">Validate and calculate IBAN numbers through the following form or by using our webservice. See below for examples on how to use it. </p>
 					</div>
+					<p><b> Update (2019/07/25) </b>: Openiban is back online.</p>
 					<p><b> Update (2018/01/24) </b>: Updated BIC data for DE, LU, NL, BE, CH. (Thanks <a href="https://github.com/jaltek">@jaltek</a>!)</p>
 					<p><b> Update (2017/12/07) </b>: Updated BIC data for Germany.
 					<p><b> Update (2017/08/13) </b>: Added BIC data for Austria and Liechtenstein.
@@ -409,7 +367,7 @@ $.ajax({
 					</div>
 		      <div class="footer">
 		        <div class="pull-left">
-		        	<p>&copy; Chris Grieger 2018</p>
+		        	<p>&copy; Chris Grieger 2019</p>
 		        </div>
 		      </div>
 

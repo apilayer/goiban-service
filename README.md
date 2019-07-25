@@ -1,13 +1,7 @@
 goiban-service
 ==============
 
-## Service Shutdown Notice
-
-The openiban API will cease operation on the 24th of May, 10 p.m. GMT.
-
-You can read more about it at https://openiban.com.
-
-**Important**: I will continue to maintain the `goiban-service` repository.
+## Openiban is going to be revived, stay tuned!
 
 --- 
 
