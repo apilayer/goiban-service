@@ -24,7 +24,7 @@
     <![endif]-->
 </head>
 	<body>
-		<div class="container">
+		<div class="container " style="margin-top: 10px">
 		      <div class="header">
 		        <ul class="nav nav-pills pull-right">
 		          <li class="active"><a href="/">Home</a></li>
@@ -167,9 +167,6 @@
 		        </div>
 
 		        <div class="col-lg-6">
-		          <h4><a href="/metrics">Metrics</a></h4>
-							<canvas id="chart" style="width: 100%; padding-right: 18px; height: 200px;"></canvas>
-		          <p>Check out all gathered metrics in <a href="/metrics">JSON format</a>. The <a href="http://github.com/fourcube/goiban-service">goiban-service</a> implementation supports <a href="https://keen.io/">KeenIO</a> metrics (deprecated). See the <a href="http://github.com/fourcube/goiban-service">README</a> for more information.</p>
 		          <h4>Validation mechanics</h4>
 		          <p>Validation currently works by checking validity of the IBAN checksum and the length restriction for country specific IBAN numbers. A list of country specific BIC checks can be found <a href="#additional-info">here</a>. If the validation result is valid, the IBAN is technically OK for the specific country. <p class="text-danger"><b>Warning: Even technically valid IBANs might still contain a crafted bank code or account number.</b></p></p>
 		        </div>
@@ -367,7 +364,7 @@ $.ajax({
 					</div>
 		      <div class="footer">
 		        <div class="pull-left">
-		        	<p>&copy; Chris Grieger 2019</p>
+		        	<p>&copy; 2019 apilayer</p>   
 		        </div>
 		      </div>
 

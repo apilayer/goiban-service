@@ -1,6 +1,5 @@
 $(document).ready(function() {
   goiban.getCountryCodes(function (codes) {
-    console.log(codes);
     var $el = $("#calculate_country_input");
 
     $el.empty();
@@ -75,7 +74,7 @@ $(document).ready(function() {
 
 	});
 
-	var ctx = document.getElementById('chart').getContext('2d');
+//	var ctx = document.getElementById('chart').getContext('2d');
 	var chart24h,
 	 knownLabels;
 
@@ -97,8 +96,8 @@ $(document).ready(function() {
 		});
 	}
 
-	updateChart();
-	setInterval(updateChart, 10000);
+//	updateChart();
+//	setInterval(updateChart, 10000);
 
 });
 
